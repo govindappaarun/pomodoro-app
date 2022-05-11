@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   ChakraProvider,
   Box,
@@ -13,7 +13,18 @@ import { ColorModeSwitcher } from './ColorModeSwitcher';
 import { MdCloudDone } from 'react-icons/md';
 import { BsBarChart } from 'react-icons/bs';
 import AuthService from './services/AuthService';
+import { fetchToken, onMessageListener } from './firebase/config';
 function App() {
+  const [isTokenFound, setIsTokenFound] = useState(false);
+
+  fetchToken(setIsTokenFound);
+
+  onMessageListener()
+    .then(payload => {
+      console.log({ payload });
+    })
+    .catch(err => console.log('failed..', err));
+
   const handleLoginWithGoogle = async () => {
     const result = await AuthService.authWithGoogle().catch(e => {
       console.log(e.toString());
@@ -39,6 +50,10 @@ function App() {
             <IconButton icon={<BsBarChart />}>Login</IconButton>
             <ColorModeSwitcher justifySelf="flex-end" />
             <Button onClick={handleLoginWithGoogle}>Google Login</Button>
+          </Box>
+          <Box>
+            {isTokenFound && <h1> Notification permission enabled 👍🏻 </h1>}
+            {!isTokenFound && <h1> Need notification permission ❗️ </h1>}
           </Box>
           <VStack spacing={8}>Hello Pomofocus.in</VStack>
         </Grid>

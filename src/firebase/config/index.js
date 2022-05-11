@@ -2,6 +2,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAnalytics } from 'firebase/analytics';
 import { getAuth } from 'firebase/auth';
+import { getMessaging, getToken, onMessage } from 'firebase/messaging';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -21,5 +22,32 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const analytics = getAnalytics(app);
 const auth = getAuth(app);
+const messaging = getMessaging(app);
 
-export { auth, analytics };
+export const fetchToken = setTokenFound => {
+  return getToken(messaging, {
+    vapidKey: process.env.REACT_APP_FIREBASE_PUSH_API_KEY,
+  })
+    .then(currentToken => {
+      if (currentToken) {
+        console.log('current token for client', currentToken);
+        setTokenFound(true);
+      } else {
+        console.log(
+          'No registeration available. Request permission to generate one'
+        );
+      }
+    })
+    .catch(err => {
+      console.log('error occured while retrieving one of the token');
+    });
+};
+
+export const onMessageListener = () =>
+  new Promise(resolve => {
+    onMessage(messaging, payload => {
+      resolve(payload);
+    });
+  });
+
+export { auth, analytics, messaging };
