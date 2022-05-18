@@ -10,7 +10,7 @@ import TimerSettings from './components/settings';
 
 const HomePage = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { updateSettings } = useTimer();
+  const { updateSettings, time } = useTimer();
   const { authState, authDispatch } = useAuth();
   const handleLoginWithGoogle = async () => {
     const result = await AuthService.authWithGoogle().catch(e => {

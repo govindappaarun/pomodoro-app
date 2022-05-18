@@ -16,6 +16,7 @@ import {
   HStack,
 } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
+import { useTimer } from 'src/contexts';
 
 export default function TimerSettings({
   isOpen,
@@ -23,12 +24,13 @@ export default function TimerSettings({
   updateSettings,
   ...rest
 }) {
+  const { settings } = useTimer();
+
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting },
-  } = useForm({});
-
+  } = useForm({ defaultValues: { ...settings } });
   const onSubmit = values => {
     updateSettings(values);
   };

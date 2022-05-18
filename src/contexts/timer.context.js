@@ -1,55 +1,77 @@
-import { useContext, useState, createContext } from 'react';
-import useCountDown from 'react-countdown-hook';
+import { useContext, useState, createContext, useEffect } from 'react';
+import { useCountdown } from 'usehooks-ts';
 
 const TimerContext = createContext();
 
 const TimerProvider = ({ children }) => {
-  const [running, setRunning] = useState(false);
-  const [time, setTime] = useState(0);
-  const [currentItem, setCurrentItem] = useState({});
   const [initialTime, setInitialTime] = useState(0);
+  const [running, setIsRunning] = useState(false);
+  const [time, setTime] = useState({});
+
   const [settings, setSettings] = useState({
     pomodoro: 20,
     longbreak: 10,
     shortbreak: 5,
-    active: '',
+    active: 'pomodoro',
   });
 
-  const [timeLeft, { start, pause, resume, reset }] = useCountDown(
-    initialTime,
-    1000
-  );
+  const [timeLeft, actions] = useCountdown({
+    seconds: 20 * 60,
+    interval: 500,
+    isIncrement: false,
+  });
 
-  const stopTimer = () => {
-    setRunning(false);
-  };
+  useEffect(() => {
+    setInitialTime(settings[settings.active]);
+  }, []);
 
-  const pauseTimer = () => {
-    setRunning(false);
-    pause();
-  };
-
-  const startTimer = time => {
-    setInitialTime(10 * 60 * 60 * 1000);
-    start();
-    setRunning(true);
-  };
+  useEffect(() => {
+    if (timeLeft === 0) {
+      actions.stop();
+    }
+  }, [timeLeft]);
 
   const updateSettings = newSettings => {
+    actions.stop();
     setSettings(prev => ({ ...prev, ...newSettings }));
+  };
+
+  useEffect(() => {
+    let ss = timeLeft || initialTime;
+    let mm = Math.floor(ss / 60);
+    let progress = timeLeft ? (timeLeft / (initialTime * 60)) * 100 : 100;
+    ss = Math.floor(ss % 60);
+    ss = ss.toString().padStart(2, 0);
+    mm = mm.toString().padStart(2, 0);
+    progress = progress.toFixed(0);
+    setTime({ mm, ss, progress });
+  }, [timeLeft]);
+  console.log({ timeLeft });
+
+  const onStart = () => {
+    setIsRunning(true);
+    actions.start();
+  };
+
+  const onStop = () => {
+    setIsRunning(false);
+    actions.stop();
+  };
+
+  const onReset = () => {
+    setIsRunning(false);
+    actions.reset();
   };
 
   return (
     <TimerContext.Provider
       value={{
-        startTimer,
-        stopTimer,
-        pauseTimer,
-        running,
-        currentItem,
+        actions: { onStart, onStop, onReset },
         timeLeft,
         settings,
         updateSettings,
+        time,
+        running,
       }}
     >
       {children}

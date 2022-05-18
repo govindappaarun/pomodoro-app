@@ -25,30 +25,19 @@ import { fetchToken, onMessageListener } from '../../firebase/config';
 import TimerSettings from '../home/components/settings';
 import { useTimer } from '../../contexts';
 import { settings } from 'firebase/analytics';
-import useCountDown from 'react-countdown-hook';
 
 function PomodoroPage() {
   const [isTokenFound, setIsTokenFound] = useState(false);
 
-  fetchToken(setIsTokenFound);
+  // fetchToken(setIsTokenFound);
   onMessageListener()
     .then(payload => {
       console.log({ payload });
     })
     .catch(err => console.log('failed..', err));
 
-  const {
-    timeLeft,
-    startTimer,
-    stopTimer,
-    pauseTimer,
-    running,
-    updateSettings,
-  } = useTimer();
-
-  const [left, { start }] = useCountDown(60 * 1000);
-  const mm = Math.floor(timeLeft / 60);
-  const ss = timeLeft % 60;
+  const { timeLeft, actions, time, updateSettings, settings, running } =
+    useTimer();
 
   const onSwitch = active => {
     updateSettings({ active });
@@ -57,7 +46,7 @@ function PomodoroPage() {
   return (
     <ChakraProvider theme={theme}>
       <Grid minH="81vh" p={3}>
-        <Progress colorScheme="green" size="sm" value={10} />
+        <Progress colorScheme="green" size="sm" value={100 - time.progress} />
         <Center py={6}>
           <Box
             maxW={'445px'}
@@ -74,7 +63,7 @@ function PomodoroPage() {
                 <Button
                   onClick={() => onSwitch('pomodoro')}
                   colorScheme="teal"
-                  variant="outline"
+                  variant={'ghost'}
                   size="lg"
                   isActive={settings.active === 'pomodoro'}
                 >
@@ -105,11 +94,18 @@ function PomodoroPage() {
                 fontSize={'2xl'}
                 fontFamily={'body'}
               >
-                {left}
+                <Text align="center" fontSize={'9xl'}>
+                  {timeLeft === 0
+                    ? `${settings[settings.active]}:00`
+                    : `${time.mm}:${time.ss}
+                  `}
+                </Text>
               </Heading>
-              {!running && <Button onClick={start}>Start</Button>}
-              {running && <Button onClick={pauseTimer}>Pause</Button>}
-              {running && <Button onClick={stopTimer}>Stop</Button>}
+              <Button mt={'4'} size={'lg'} onClick={actions.onStart}>
+                Start
+              </Button>
+              {running && <Button onClick={actions.onStop}>Stop</Button>}
+              {running && <Button onClick={actions.onReset}>Reset</Button>}
             </Stack>
           </Box>
         </Center>
