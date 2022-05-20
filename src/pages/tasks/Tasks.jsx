@@ -14,10 +14,10 @@ import {
   Center,
   VStack,
   Divider,
+  calc,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { RiAddLine } from 'react-icons/ri';
 
 const Tasks = () => {
   const {
@@ -37,8 +37,8 @@ const Tasks = () => {
   };
 
   return (
-    <VStack alignItems={'start'} mx={'1rem'}>
-      <Box maxWidth={'350px'} mb={'2rem'} mt="1rem">
+    <VStack alignItems={'center'} mx={'1rem'} minHeight={'calc(100vh - 150px)'}>
+      <Box maxWidth={'350px'} mb={'2rem'} mt="10rem">
         <form px={'1rem'} onSubmit={handleSubmit(onSubmit)}>
           <FormControl isInvalid={errors.task}>
             <FormLabel htmlFor="task">Task description</FormLabel>
@@ -76,13 +76,6 @@ const Tasks = () => {
           );
         })}
       </List>
-
-      {/* <IconButton
-        isRound
-        colorScheme="blue"
-        fontSize={'3xl'}
-        icon={<RiAddLine />}
-      /> */}
     </VStack>
   );
 };

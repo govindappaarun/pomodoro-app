@@ -37,6 +37,10 @@ const TimerProvider = ({ children }) => {
   };
 
   useEffect(() => {
+    calcualteTimeProgress();
+  }, [timeLeft]);
+
+  const calcualteTimeProgress = () => {
     let ss = timeLeft || initialTime;
     let mm = Math.floor(ss / 60);
     let progress = timeLeft ? (timeLeft / (initialTime * 60)) * 100 : 100;
@@ -45,8 +49,7 @@ const TimerProvider = ({ children }) => {
     mm = mm.toString().padStart(2, 0);
     progress = progress.toFixed(0);
     setTime({ mm, ss, progress });
-  }, [timeLeft]);
-  console.log({ timeLeft });
+  };
 
   const onStart = () => {
     setIsRunning(true);

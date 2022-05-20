@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   ChakraProvider,
   Box,
@@ -6,9 +6,7 @@ import {
   theme,
   Text,
   Button,
-  IconButton,
   Progress,
-  useDisclosure,
   HStack,
 } from '@chakra-ui/react';
 
@@ -20,26 +18,14 @@ import {
   useColorModeValue,
 } from '@chakra-ui/react';
 
-import { AuthService } from '../../services';
-import { fetchToken, onMessageListener } from '../../firebase/config';
-import TimerSettings from '../home/components/settings';
 import { useTimer } from '../../contexts';
-import { settings } from 'firebase/analytics';
 
 function PomodoroPage() {
-  const [isTokenFound, setIsTokenFound] = useState(false);
-
-  // fetchToken(setIsTokenFound);
-  onMessageListener()
-    .then(payload => {
-      console.log({ payload });
-    })
-    .catch(err => console.log('failed..', err));
-
   const { timeLeft, actions, time, updateSettings, settings, running } =
     useTimer();
 
   const onSwitch = active => {
+    actions.onReset();
     updateSettings({ active });
   };
 

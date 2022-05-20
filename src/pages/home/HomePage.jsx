@@ -5,7 +5,7 @@ import { useTimer } from 'src/contexts';
 import { useAuth } from 'src/contexts';
 import { AuthService } from 'src/services';
 import Footer from './components/footer';
-import Header, { Simple } from './components/header';
+import Header from './components/header';
 import TimerSettings from './components/settings';
 
 const HomePage = () => {
@@ -28,7 +28,6 @@ const HomePage = () => {
 
   return (
     <div>
-      <Simple />
       <Header
         onLogin={handleLoginWithGoogle}
         onLogout={handleLogout}
