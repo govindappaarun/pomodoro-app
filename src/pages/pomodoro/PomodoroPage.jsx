@@ -29,7 +29,7 @@ import { useTasks } from 'src/contexts/tasks.context';
 let intervalId = null;
 
 function PomodoroPage() {
-  const { updateSettings, settings, running } = useTimer();
+  const { updateSettings, settings } = useTimer();
   const [time, setTime] = useState({});
   const [isRunning, setIsRunning] = useState(false);
   const toast = useToast({ position: 'bottom-right', size: 'lg' });
