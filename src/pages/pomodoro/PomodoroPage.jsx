@@ -34,7 +34,7 @@ function PomodoroPage() {
   const [isRunning, setIsRunning] = useState(false);
   const toast = useToast({ position: 'bottom-right', size: 'lg' });
   const [active, setActive] = useState('pomodoro');
-  const { tasksState } = useTasks();
+  const { tasksState, tasksDispatch } = useTasks();
   const [timeLeft, setTimeLeft] = useState(0);
 
   useEffect(() => {
@@ -57,8 +57,13 @@ function PomodoroPage() {
     const initialTime = settings[active] * 60;
     updateTime(isRunning ? timeLeft : initialTime);
     if (timeLeft === 0 && isRunning) {
-      presentToast();
       onStop();
+      tasksDispatch({
+        type: 'MARK_DONE',
+        payload: { task: tasksState.activeTask },
+      });
+      presentToast();
+      setIsRunning(false);
     }
   }, [timeLeft, isRunning]);
 
@@ -212,7 +217,7 @@ function PomodoroPage() {
             <Box mt={'2rem'}>
               {tasksState?.activeTask ? (
                 <Heading mb={'2rem'}>
-                  Current : {tasksState.activeTask.title}
+                  Active Task : {tasksState.activeTask.title}
                 </Heading>
               ) : (
                 <p>Choose a task below </p>

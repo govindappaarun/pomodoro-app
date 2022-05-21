@@ -46,6 +46,7 @@ export const tasksReducer = (state, { type, payload }) => {
       const { task } = payload;
       return {
         ...state,
+        activeTask: null,
         tasks: state.tasks.filter(({ id }) => id !== task.id),
       };
     }
@@ -54,12 +55,12 @@ export const tasksReducer = (state, { type, payload }) => {
       const { task, status = true } = payload;
       return {
         ...state,
+        activeTask: null,
         tasks: state.tasks.map(item =>
           item.id === task.id ? { ...item, done: status } : item
         ),
       };
     }
-
     default:
       throw new Error(`Invalid action type ${type}`);
   }

@@ -43,7 +43,7 @@ export default function TimerSettings() {
         mb={'2rem'}
         mt="2rem"
       >
-        <Heading> Tune your Pomodoro </Heading>
+        <Heading mb={'2rem'}>Tune your Pomodoro</Heading>
         <form px={'1rem'} onSubmit={handleSubmit(onSubmit)}>
           <HStack spacing="24px">
             <FormControl isInvalid={errors.pomodoro}>

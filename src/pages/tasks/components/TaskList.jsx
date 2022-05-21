@@ -19,7 +19,8 @@ import {
 function TaskList() {
   const { tasksState, tasksDispatch } = useTasks();
 
-  const deleteTask = task => {
+  const deleteTask = (e, task) => {
+    e.stopPropagation();
     tasksDispatch({ type: 'DELETE_TASK', payload: { task } });
   };
 
@@ -68,7 +69,7 @@ function TaskList() {
                 <Td>{task.pomodoro}</Td>
                 <Td>{task.status ? 'Done' : 'ToDo'}</Td>
                 <Td>
-                  <Button onClick={() => deleteTask(task)}>Delete</Button>
+                  <Button onClick={e => deleteTask(e, task)}>Delete</Button>
                 </Td>
               </Tr>
             ))}
