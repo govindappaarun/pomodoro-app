@@ -1,23 +1,24 @@
 import {
   Box,
-  Checkbox,
   FormControl,
   Heading,
-  IconButton,
   Input,
-  List,
-  ListItem,
-  Text,
   FormLabel,
   FormErrorMessage,
   Button,
-  Center,
+  Textarea,
   VStack,
-  Divider,
-  calc,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  useToast,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useTasks } from 'src/contexts/tasks.context';
+import TaskList from './components/TaskList';
 
 const Tasks = () => {
   const {
@@ -26,31 +27,81 @@ const Tasks = () => {
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const [tasks, setTasks] = useState([
-    { text: 'Arun here' },
-    { text: 'Arun here' },
-    { text: 'Arun here' },
-  ]);
+  const { tasksDispatch } = useTasks();
+  const toast = useToast();
 
   const onSubmit = values => {
-    setTasks(prev => [...prev, { text: values.task }]);
+    tasksDispatch({ type: 'ADD_TASK', payload: { task: values } });
+    toast({
+      title: 'Task added successfully',
+      description: 'Its time to do more work in less time.',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    });
   };
 
   return (
     <VStack alignItems={'center'} mx={'1rem'} minHeight={'calc(100vh - 150px)'}>
-      <Box maxWidth={'350px'} mb={'2rem'} mt="10rem">
+      <Box
+        p={10}
+        shadow="md"
+        minWidth={'40rem'}
+        borderWidth="1px"
+        mb={'2rem'}
+        mt="2rem"
+      >
+        <Heading fontSize="xl" my={'1rem'}>
+          Add and get it done
+        </Heading>
         <form px={'1rem'} onSubmit={handleSubmit(onSubmit)}>
-          <FormControl isInvalid={errors.task}>
-            <FormLabel htmlFor="task">Task description</FormLabel>
+          <FormControl isInvalid={errors.title} my={'1rem'}>
+            <FormLabel htmlFor="title">Task Title</FormLabel>
             <Input
-              id="task"
-              placeholder="Enter task description here"
-              {...register('task', {
-                required: 'This is required',
+              size={'lg'}
+              id="title"
+              placeholder="Enter task title here"
+              {...register('title', {
+                required: 'Title is required',
               })}
             />
             <FormErrorMessage>
-              {errors.task && errors.task.message}
+              {errors.title && errors.title.message}
+            </FormErrorMessage>
+          </FormControl>
+          <FormControl isInvalid={errors.description} my={'1rem'}>
+            <FormLabel htmlFor="task">Task description</FormLabel>
+            <Textarea
+              size={'lg'}
+              id="description"
+              placeholder="Enter task description here"
+              {...register('description', {
+                required: 'Description is required',
+              })}
+            />
+            <FormErrorMessage>
+              {errors.description && errors.description.message}
+            </FormErrorMessage>
+          </FormControl>
+
+          <FormControl isInvalid={errors.pomodoro} my={'1rem'}>
+            <FormLabel htmlFor="pomodoro">Pomodoro estimate</FormLabel>
+            <NumberInput size={'lg'}>
+              <NumberInputField
+                id="pomodoro"
+                name="pomodoro"
+                placeholder="Enter number of  pomodoro required"
+                {...register('pomodoro', {
+                  required: 'pomodoro is required',
+                })}
+              />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            <FormErrorMessage>
+              {errors.pomodoro && errors.pomodoro.message}
             </FormErrorMessage>
           </FormControl>
           <Button
@@ -63,19 +114,7 @@ const Tasks = () => {
           </Button>
         </form>
       </Box>
-
-      <Divider />
-
-      <Heading>List of Tasks</Heading>
-      <List>
-        {tasks.map((item, index) => {
-          return (
-            <ListItem key={index} py={'0.5rem'}>
-              <Checkbox size={'lg'}>{item.text}</Checkbox>
-            </ListItem>
-          );
-        })}
-      </List>
+      <TaskList />
     </VStack>
   );
 };

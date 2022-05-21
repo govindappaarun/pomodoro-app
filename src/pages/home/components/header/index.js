@@ -3,7 +3,7 @@ import { CheckCircleIcon } from '@chakra-ui/icons';
 import { Box, Button, Heading, HStack, Text } from '@chakra-ui/react';
 import { BsBarChart } from 'react-icons/bs';
 import { MdOutlineSettings } from 'react-icons/md';
-import { FaUserCircle } from 'react-icons/fa';
+import { FaUserCircle, FaHome, FaTasks } from 'react-icons/fa';
 import { ColorModeSwitcher } from 'src/ColorModeSwitcher';
 import { NavLink } from 'react-router-dom';
 
@@ -12,9 +12,14 @@ function Header({ onSettings, onLogin, onLogout, isLoggedIn, ...rest }) {
     <HStack mx={5} align={'center'} mt={5}>
       <CheckCircleIcon boxSize={'40px'} color={'green.500'} ml={1} />
       <Heading>Pomofocus</Heading>
-      <Button leftIcon={<MdOutlineSettings />} size="lg" onClick={onSettings}>
-        Settings
-      </Button>
+      <NavLink to="/">
+        <Button leftIcon={<FaHome />}>Home</Button>
+      </NavLink>
+      <NavLink to="settings">
+        <Button leftIcon={<MdOutlineSettings />} size="lg">
+          Settings
+        </Button>
+      </NavLink>
 
       {!isLoggedIn && (
         <>
@@ -26,17 +31,19 @@ function Header({ onSettings, onLogin, onLogout, isLoggedIn, ...rest }) {
           >
             Login
           </Button>
-          <Button>
-            <NavLink to="/tasks">Tasks</NavLink>
-          </Button>
+          <NavLink to="/tasks">
+            <Button leftIcon={<FaTasks />}>Manage Tasks</Button>
+          </NavLink>
         </>
       )}
 
       {isLoggedIn && (
         <>
-          <Button leftIcon={<BsBarChart />} size="lg">
-            Report
-          </Button>
+          <NavLink to="report">
+            <Button leftIcon={<BsBarChart />} size="lg">
+              Report
+            </Button>
+          </NavLink>
           <Button
             leftIcon={<FaUserCircle />}
             mr={1}
