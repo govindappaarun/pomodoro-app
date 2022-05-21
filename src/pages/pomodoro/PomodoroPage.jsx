@@ -37,11 +37,10 @@ function PomodoroPage() {
   const { tasksState } = useTasks();
   const [timeLeft, setTimeLeft] = useState(0);
 
-  const [actions] = useCountdown({
-    seconds: settings[active] * 60,
-    interval: 500,
-    isIncrement: false,
-  });
+  useEffect(() => {
+    setTimeLeft(0);
+    updateTime(settings[active] * 60);
+  }, [active]);
 
   // interval timer for 1 sec count down
   useEffect(() => {
@@ -56,19 +55,23 @@ function PomodoroPage() {
   // calculate display time and progress based on timeLeft
   useEffect(() => {
     const initialTime = settings[active] * 60;
-    let ss = isRunning ? timeLeft : initialTime;
-    let mm = Math.floor(ss / 60);
-    let progress = timeLeft ? (timeLeft / (initialTime * 60)) * 100 : 100;
-    ss = Math.floor(ss % 60);
-    ss = ss.toString().padStart(2, 0);
-    mm = mm.toString().padStart(2, 0);
-    progress = progress.toFixed(0);
-    setTime({ mm, ss, progress });
+    updateTime(isRunning ? timeLeft : initialTime);
     if (timeLeft === 0 && isRunning) {
       presentToast();
       onStop();
     }
   }, [timeLeft, isRunning]);
+
+  const updateTime = _time => {
+    let ss = _time;
+    let mm = Math.floor(ss / 60);
+    let progress = timeLeft ? (timeLeft / (settings[active] * 60)) * 100 : 0;
+    ss = Math.floor(ss % 60);
+    ss = ss.toString().padStart(2, 0);
+    mm = mm.toString().padStart(2, 0);
+    progress = progress.toFixed(0);
+    setTime({ mm, ss, progress });
+  };
 
   // clear the timer
   const stopInterval = () => {
@@ -181,9 +184,7 @@ function PomodoroPage() {
                   fontFamily={'body'}
                 >
                   <Text align="center" fontSize={'9xl'}>
-                    {isRunning
-                      ? `${time.mm}:${time.ss}`
-                      : `${settings[active]}:00`}
+                    {`${time.mm}:${time.ss}`}
                   </Text>
                 </Heading>
                 <Button
