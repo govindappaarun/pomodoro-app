@@ -132,100 +132,98 @@ function PomodoroPage() {
     }
   };
   return (
-    <ChakraProvider theme={theme}>
-      <Grid minH="81vh" p={3}>
-        <Progress colorScheme="green" size="sm" value={100 - time.progress} />
-        <Center py={6}>
-          <VStack>
-            <Box
-              maxW={'445px'}
-              height={'65vh'}
-              w={'full'}
-              bg={'red.100'}
-              boxShadow={'xl'}
-              rounded={'md'}
-              p={6}
-              overflow={'hidden'}
-            >
-              <Stack>
-                <HStack>
-                  <Button
-                    onClick={() => onSwitch('pomodoro')}
-                    colorScheme="teal"
-                    variant={'ghost'}
-                    size="lg"
-                    isActive={settings.active === 'pomodoro'}
-                  >
-                    Pomodoro
-                  </Button>
-                  <Button
-                    onClick={() => onSwitch('shortbreak')}
-                    colorScheme="teal"
-                    variant="ghost"
-                    size="lg"
-                    isActive={settings.active === 'shortbreak'}
-                  >
-                    Short Break
-                  </Button>
-                  <Button
-                    onClick={() => onSwitch('longbreak')}
-                    colorScheme="teal"
-                    variant="ghost"
-                    size="lg"
-                    isActive={settings.active === 'longbreak'}
-                  >
-                    Long Break
-                  </Button>
-                </HStack>
-                {settings.active}
-                <Heading
-                  color={useColorModeValue('gray.700', 'white')}
-                  fontSize={'2xl'}
-                  fontFamily={'body'}
-                >
-                  <Text align="center" fontSize={'9xl'}>
-                    {`${time.mm}:${time.ss}`}
-                  </Text>
-                </Heading>
+    <Grid minH="81vh" p={3}>
+      <Progress colorScheme="green" size="sm" value={100 - time.progress} />
+      <Center py={6}>
+        <VStack>
+          <Box
+            maxW={'445px'}
+            height={'65vh'}
+            w={'full'}
+            bg={'red.100'}
+            boxShadow={'xl'}
+            rounded={'md'}
+            p={6}
+            overflow={'hidden'}
+          >
+            <Stack>
+              <HStack>
                 <Button
-                  mt={'4'}
-                  size={'lg'}
-                  onClick={onStart}
-                  disabled={!tasksState?.activeTask}
+                  onClick={() => onSwitch('pomodoro')}
+                  colorScheme="teal"
+                  variant={'ghost'}
+                  size="lg"
+                  isActive={settings.active === 'pomodoro'}
                 >
-                  Start
+                  Pomodoro
                 </Button>
-                {isRunning && (
-                  <Button
-                    onClick={() => {
-                      onStop();
-                      toast({
-                        title: 'Timer stopped on demand',
-                        duration: 3000,
-                      });
-                    }}
-                  >
-                    Stop
-                  </Button>
-                )}
-                {isRunning && <Button onClick={onReset}>Reset</Button>}
-              </Stack>
-              <Box mt={'2rem'}>
-                {tasksState?.activeTask ? (
-                  <Heading mb={'2rem'}>
-                    Current : {tasksState.activeTask.title}
-                  </Heading>
-                ) : (
-                  <p>Choose a task below </p>
-                )}
-              </Box>
+                <Button
+                  onClick={() => onSwitch('shortbreak')}
+                  colorScheme="teal"
+                  variant="ghost"
+                  size="lg"
+                  isActive={settings.active === 'shortbreak'}
+                >
+                  Short Break
+                </Button>
+                <Button
+                  onClick={() => onSwitch('longbreak')}
+                  colorScheme="teal"
+                  variant="ghost"
+                  size="lg"
+                  isActive={settings.active === 'longbreak'}
+                >
+                  Long Break
+                </Button>
+              </HStack>
+              {settings.active}
+              <Heading
+                color={useColorModeValue('gray.700', 'white')}
+                fontSize={'2xl'}
+                fontFamily={'body'}
+              >
+                <Text align="center" fontSize={'9xl'}>
+                  {`${time.mm}:${time.ss}`}
+                </Text>
+              </Heading>
+              <Button
+                mt={'4'}
+                size={'lg'}
+                onClick={onStart}
+                disabled={!tasksState?.activeTask}
+              >
+                Start
+              </Button>
+              {isRunning && (
+                <Button
+                  onClick={() => {
+                    onStop();
+                    toast({
+                      title: 'Timer stopped on demand',
+                      duration: 3000,
+                    });
+                  }}
+                >
+                  Stop
+                </Button>
+              )}
+              {isRunning && <Button onClick={onReset}>Reset</Button>}
+            </Stack>
+            <Box mt={'2rem'}>
+              {tasksState?.activeTask ? (
+                <Heading mb={'2rem'}>
+                  Current : {tasksState.activeTask.title}
+                </Heading>
+              ) : (
+                <p>Choose a task below </p>
+              )}
             </Box>
-            <Divider />
-            <TaskList />
-          </VStack>
-        </Center>
-      </Grid>
-    </ChakraProvider>
+          </Box>
+          <Divider />
+          <TaskList />
+        </VStack>
+      </Center>
+    </Grid>
   );
 }
 

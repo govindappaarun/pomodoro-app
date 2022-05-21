@@ -13,6 +13,7 @@ import {
   NumberInputStepper,
   NumberIncrementStepper,
   NumberDecrementStepper,
+  useToast,
 } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -26,10 +27,18 @@ const Tasks = () => {
     formState: { errors, isSubmitting },
   } = useForm();
 
-  const { tasksState, tasksDispatch } = useTasks();
+  const { tasksDispatch } = useTasks();
+  const toast = useToast();
 
   const onSubmit = values => {
     tasksDispatch({ type: 'ADD_TASK', payload: { task: values } });
+    toast({
+      title: 'Task added successfully',
+      description: 'Its time to do more work in less time.',
+      status: 'success',
+      duration: 3000,
+      isClosable: true,
+    });
   };
 
   return (

@@ -15,9 +15,11 @@ function Header({ onSettings, onLogin, onLogout, isLoggedIn, ...rest }) {
       <NavLink to="/">
         <Button leftIcon={<FaHome />}>Home</Button>
       </NavLink>
-      <Button leftIcon={<MdOutlineSettings />} size="lg" onClick={onSettings}>
-        Settings
-      </Button>
+      <NavLink to="settings">
+        <Button leftIcon={<MdOutlineSettings />} size="lg">
+          Settings
+        </Button>
+      </NavLink>
 
       {!isLoggedIn && (
         <>
@@ -37,9 +39,11 @@ function Header({ onSettings, onLogin, onLogout, isLoggedIn, ...rest }) {
 
       {isLoggedIn && (
         <>
-          <Button leftIcon={<BsBarChart />} size="lg">
-            Report
-          </Button>
+          <NavLink to="report">
+            <Button leftIcon={<BsBarChart />} size="lg">
+              Report
+            </Button>
+          </NavLink>
           <Button
             leftIcon={<FaUserCircle />}
             mr={1}
