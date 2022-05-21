@@ -9,14 +9,14 @@ const TimerProvider = ({ children }) => {
   const [time, setTime] = useState({});
 
   const [settings, setSettings] = useState({
-    pomodoro: 20,
-    longbreak: 10,
-    shortbreak: 5,
+    pomodoro: 2,
+    longbreak: 1,
+    shortbreak: 0.5,
     active: 'pomodoro',
   });
 
   const [timeLeft, actions] = useCountdown({
-    seconds: 20 * 60,
+    seconds: settings[settings.active] * 60,
     interval: 500,
     isIncrement: false,
   });

@@ -37,10 +37,15 @@ export default function TimerSettings({
 
   return (
     <>
-      <Modal blockScrollOnMount={false} isOpen={isOpen} onClose={onClose}>
+      <Modal
+        blockScrollOnMount={false}
+        isOpen={isOpen}
+        onClose={onClose}
+        size={'lg'}
+      >
         <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>TIMER SETTINGS</ModalHeader>
+        <ModalContent p={'2rem'}>
+          <ModalHeader>Change Pomodoro Settings</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <form px={'1rem'} onSubmit={handleSubmit(onSubmit)}>

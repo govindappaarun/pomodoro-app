@@ -1,10 +1,13 @@
 import { AuthProvider } from './auth.context';
+import { TasksProvider } from './tasks.context';
 import { TimerProvider } from './timer.context';
 
 const Provider = ({ children }) => {
   return (
     <AuthProvider>
-      <TimerProvider>{children}</TimerProvider>
+      <TimerProvider>
+        <TasksProvider>{children}</TasksProvider>
+      </TimerProvider>
     </AuthProvider>
   );
 };
