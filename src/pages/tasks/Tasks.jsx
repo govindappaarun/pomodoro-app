@@ -77,15 +77,15 @@ const Tasks = () => {
 
           <FormControl isInvalid={errors.pomodoro} my={'1rem'}>
             <FormLabel htmlFor="pomodoro">Pomodoro estimate</FormLabel>
-            <NumberInput
-              size={'lg'}
-              id="pomodoro"
-              placeholder="Enter number of  pomodoro required"
-              {...register('pomodoro', {
-                required: 'pomodoro is required',
-              })}
-            >
-              <NumberInputField />
+            <NumberInput size={'lg'}>
+              <NumberInputField
+                id="pomodoro"
+                name="pomodoro"
+                placeholder="Enter number of  pomodoro required"
+                {...register('pomodoro', {
+                  required: 'pomodoro is required',
+                })}
+              />
               <NumberInputStepper>
                 <NumberIncrementStepper />
                 <NumberDecrementStepper />

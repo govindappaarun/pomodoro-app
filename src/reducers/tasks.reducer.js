@@ -1,5 +1,28 @@
+const tasks = [
+  {
+    title: 'test',
+    id: 1234,
+    description: 'test sdasd',
+    status: false,
+    pomodro: 1,
+  },
+  {
+    title: 'test 1344',
+    id: 1235,
+    description: 'test sdasd',
+    status: false,
+    pomodro: 1,
+  },
+  {
+    title: 'test 125',
+    id: 126,
+    description: 'test sdasd',
+    status: false,
+    pomodro: 1,
+  },
+];
 export const initialState = {
-  tasks: [],
+  tasks: tasks,
   activeTask: null,
 };
 
@@ -9,7 +32,7 @@ export const tasksReducer = (state, { type, payload }) => {
       const { task } = payload;
       return {
         ...state,
-        currentTask: task,
+        activeTask: task,
       };
     }
 

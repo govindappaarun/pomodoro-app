@@ -13,6 +13,7 @@ import {
   Heading,
   Button,
   Box,
+  Checkbox,
 } from '@chakra-ui/react';
 
 function TaskList() {
@@ -52,11 +53,20 @@ function TaskList() {
           </Thead>
           <Tbody>
             {tasksState.tasks?.map((task, index) => (
-              <Tr key={index} onClick={() => toggleTask(task)}>
+              <Tr
+                key={index}
+                onClick={() => (!task.status ? setCurrentTask(task) : () => {})}
+              >
+                <Td>
+                  <Checkbox
+                    onChange={() => toggleTask(task)}
+                    checked={task.done}
+                  />
+                </Td>
                 <Td>{task.title}</Td>
                 <Td>{task.description}</Td>
                 <Td>{task.pomodoro}</Td>
-                <Td>{task?.status ? 'Done' : 'ToDo'}</Td>
+                <Td>{task.status ? 'Done' : 'ToDo'}</Td>
                 <Td>
                   <Button onClick={() => deleteTask(task)}>Delete</Button>
                 </Td>

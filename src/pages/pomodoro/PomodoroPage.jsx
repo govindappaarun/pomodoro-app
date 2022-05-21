@@ -24,25 +24,39 @@ import {
 import { useTimer } from '../../contexts';
 import TaskList from '../tasks/components/TaskList';
 import { useCountdown } from 'usehooks-ts';
+import { useTasks } from 'src/contexts/tasks.context';
+
+let intervalId = null;
 
 function PomodoroPage() {
   const { updateSettings, settings, running } = useTimer();
   const [time, setTime] = useState({});
   const [isRunning, setIsRunning] = useState(false);
   const toast = useToast({ position: 'bottom-right', size: 'lg' });
+  const [active, setActive] = useState('pomodoro');
+  const { tasksState } = useTasks();
+  const [timeLeft, setTimeLeft] = useState(0);
 
-  const [timeLeft, actions] = useCountdown({
-    seconds: () => {
-      console.log(settings.active);
-      return settings[settings.active] * 60;
-    },
+  const [actions] = useCountdown({
+    seconds: settings[active] * 60,
     interval: 500,
     isIncrement: false,
   });
 
+  // interval timer for 1 sec count down
   useEffect(() => {
-    const initialTime = settings[settings.active] * 60;
-    let ss = timeLeft || initialTime;
+    if (isRunning) {
+      intervalId = setInterval(() => {
+        setTimeLeft(prev => prev - 1);
+      }, 1000);
+    }
+    return () => stopInterval();
+  }, [isRunning, timeLeft]);
+
+  // calculate display time and progress based on timeLeft
+  useEffect(() => {
+    const initialTime = settings[active] * 60;
+    let ss = isRunning ? timeLeft : initialTime;
     let mm = Math.floor(ss / 60);
     let progress = timeLeft ? (timeLeft / (initialTime * 60)) * 100 : 100;
     ss = Math.floor(ss % 60);
@@ -56,25 +70,31 @@ function PomodoroPage() {
     }
   }, [timeLeft, isRunning]);
 
+  // clear the timer
+  const stopInterval = () => {
+    clearInterval(intervalId);
+  };
+
+  // on category switch
   const onSwitch = active => {
-    onReset();
+    setActive(active);
     updateSettings({ active });
+    setIsRunning(false);
   };
 
   const onStart = () => {
+    setTimeLeft(settings[active] * 60);
     setIsRunning(true);
-    actions.start();
   };
 
   const onStop = () => {
-    setIsRunning(false);
-    actions.stop();
-    toast({ title: 'Timer stopped on demand', duration: 3000 });
+    stopInterval();
   };
 
   const onReset = () => {
     setIsRunning(false);
-    actions.reset();
+    stopInterval();
+    setTimeLeft(settings[active] * 60);
   };
 
   const presentToast = () => {
@@ -155,7 +175,6 @@ function PomodoroPage() {
                   </Button>
                 </HStack>
                 {settings.active}
-
                 <Heading
                   color={useColorModeValue('gray.700', 'white')}
                   fontSize={'2xl'}
@@ -164,15 +183,41 @@ function PomodoroPage() {
                   <Text align="center" fontSize={'9xl'}>
                     {isRunning
                       ? `${time.mm}:${time.ss}`
-                      : `${settings[settings.active]}:00`}
+                      : `${settings[active]}:00`}
                   </Text>
                 </Heading>
-                <Button mt={'4'} size={'lg'} onClick={onStart}>
+                <Button
+                  mt={'4'}
+                  size={'lg'}
+                  onClick={onStart}
+                  disabled={!tasksState?.activeTask}
+                >
                   Start
                 </Button>
-                {isRunning && <Button onClick={onStop}>Stop</Button>}
+                {isRunning && (
+                  <Button
+                    onClick={() => {
+                      onStop();
+                      toast({
+                        title: 'Timer stopped on demand',
+                        duration: 3000,
+                      });
+                    }}
+                  >
+                    Stop
+                  </Button>
+                )}
                 {isRunning && <Button onClick={onReset}>Reset</Button>}
               </Stack>
+              <Box mt={'2rem'}>
+                {tasksState?.activeTask ? (
+                  <Heading mb={'2rem'}>
+                    Current : {tasksState.activeTask.title}
+                  </Heading>
+                ) : (
+                  <p>Choose a task below </p>
+                )}
+              </Box>
             </Box>
             <Divider />
             <TaskList />
