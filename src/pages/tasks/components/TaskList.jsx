@@ -38,7 +38,7 @@ function TaskList({ onEdit, ...props }) {
 
   const editTask = (e, task) => {
     e.stopPropagation();
-    onEdit(task);
+    if (onEdit) onEdit(task);
   };
 
   const toggleTask = task => {
