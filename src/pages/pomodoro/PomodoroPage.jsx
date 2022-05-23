@@ -143,7 +143,7 @@ function PomodoroPage() {
         <VStack>
           <Box
             maxW={'445px'}
-            height={'65vh'}
+            height={'50vh'}
             w={'full'}
             bg={'red.100'}
             boxShadow={'xl'}
