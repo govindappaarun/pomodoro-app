@@ -147,7 +147,7 @@ const Tasks = () => {
           </Button>
         </form>
       </Box>
-      <TaskList onEdit={onEdit} />
+      <TaskList onEdit={onEdit} showEdit />
     </VStack>
   );
 };

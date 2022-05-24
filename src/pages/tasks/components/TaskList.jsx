@@ -21,12 +21,18 @@ import clsx from 'clsx';
 import styled from '@emotion/styled';
 
 const StyledRow = styled(Tr)`
+  cursor: pointer;
+  &.task-active {
+    background-color: lightgreen;
+    color: white;
+  }
+
   &.task-done {
     text-decoration: line-through;
   }
 `;
 
-function TaskList({ onEdit, ...props }) {
+function TaskList({ onEdit, showEdit = false, ...props }) {
   const { tasksState, tasksDispatch } = useTasks();
 
   const deleteTask = (e, task) => {
@@ -55,7 +61,7 @@ function TaskList({ onEdit, ...props }) {
   return (
     <Box>
       <Heading>List of Tasks</Heading>
-      <TableContainer maxWidth={'100%'}>
+      <TableContainer overflowX={'auto'}>
         <Table variant="simple" colorScheme="teal" size={'md'}>
           <TableCaption>
             List of planned tasks and their Pomodro estimate
@@ -73,7 +79,10 @@ function TaskList({ onEdit, ...props }) {
           <Tbody>
             {tasksState.tasks?.map((task, index) => (
               <StyledRow
-                className={clsx({ 'task-done': task.status })}
+                className={clsx({
+                  'task-done': task.status,
+                  'task-active': tasksState.activeTask?.id === task.id,
+                })}
                 key={index}
                 onClick={() => (!task.status ? setCurrentTask(task) : () => {})}
               >
@@ -88,13 +97,14 @@ function TaskList({ onEdit, ...props }) {
                 <Td>{task.pomodoro}</Td>
                 <Td>{task.status ? 'Done' : 'ToDo'}</Td>
                 <Td>
-                  <Button
-                    leftIcon={<RiEditBoxLine />}
-                    onClick={e => editTask(e, task)}
-                  >
-                    Edit
-                  </Button>
-
+                  {showEdit && (
+                    <Button
+                      leftIcon={<RiEditBoxLine />}
+                      onClick={e => editTask(e, task)}
+                    >
+                      Edit
+                    </Button>
+                  )}
                   <Button
                     leftIcon={<RiDeleteBin6Line />}
                     onClick={e => deleteTask(e, task)}
