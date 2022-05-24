@@ -24,21 +24,54 @@ const Tasks = () => {
   const {
     handleSubmit,
     register,
+    setValue,
     formState: { errors, isSubmitting },
-  } = useForm();
+  } = useForm({
+    defaultValues: {
+      title: '',
+      description: '',
+      pomodoro: 0,
+    },
+  });
 
   const { tasksDispatch } = useTasks();
   const toast = useToast();
+  const [isEdit, setIsEdit] = useState(false);
+  const [task, setTask] = useState(null);
 
   const onSubmit = values => {
-    tasksDispatch({ type: 'ADD_TASK', payload: { task: values } });
-    toast({
-      title: 'Task added successfully',
-      description: 'Its time to do more work in less time.',
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
+    if (isEdit) {
+      tasksDispatch({
+        type: 'EDIT_TASK',
+        payload: { id: task.id, task: values },
+      });
+      toast({
+        title: 'Task saved successfully',
+        description: 'Its time to do more work in less time.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+      setIsEdit(false);
+      setTask(null);
+    } else {
+      tasksDispatch({ type: 'ADD_TASK', payload: { task: values } });
+      toast({
+        title: 'Task added successfully',
+        description: 'Its time to do more work in less time.',
+        status: 'success',
+        duration: 3000,
+        isClosable: true,
+      });
+    }
+  };
+
+  const onEdit = values => {
+    setIsEdit(true);
+    setTask(values);
+    const fields = ['title', 'description', 'pomodoro'];
+    fields.forEach(field => setValue(field, values[field]));
+    window.scrollTo(10, 10);
   };
 
   return (
@@ -52,7 +85,7 @@ const Tasks = () => {
         mt="2rem"
       >
         <Heading fontSize="xl" my={'1rem'}>
-          Add and get it done
+          Add your tasks and get it done
         </Heading>
         <form px={'1rem'} onSubmit={handleSubmit(onSubmit)}>
           <FormControl isInvalid={errors.title} my={'1rem'}>
@@ -110,11 +143,11 @@ const Tasks = () => {
             isLoading={isSubmitting}
             type="submit"
           >
-            Add Task
+            {isEdit ? 'Save' : 'Add'} Task
           </Button>
         </form>
       </Box>
-      <TaskList />
+      <TaskList onEdit={onEdit} showEdit />
     </VStack>
   );
 };

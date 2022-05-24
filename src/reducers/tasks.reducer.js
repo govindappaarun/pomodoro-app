@@ -1,26 +1,27 @@
 const tasks = [
   {
-    title: 'test',
+    title: 'Implement Custom hook',
     id: 1234,
-    description: 'test sdasd',
+    description: 'Implement custom hook for infinite scroll',
     status: false,
-    pomodro: 1,
+    pomodoro: 1,
   },
   {
-    title: 'test 1344',
+    title: 'Perform Unit tests',
     id: 1235,
-    description: 'test sdasd',
+    description: 'Add Unit Tests for React Components',
     status: false,
-    pomodro: 1,
+    pomodoro: 5,
   },
   {
-    title: 'test 125',
+    title: 'Integrate Redux Toolkit',
     id: 126,
-    description: 'test sdasd',
+    description: 'Add Redux tool integration for Pomodoro App',
     status: false,
-    pomodro: 1,
+    pomodoro: 3,
   },
 ];
+
 export const initialState = {
   tasks: tasks,
   activeTask: null,
@@ -42,6 +43,17 @@ export const tasksReducer = (state, { type, payload }) => {
       return { ...state, tasks: [...state.tasks, { ...task, id }] };
     }
 
+    case 'EDIT_TASK': {
+      const { task, id } = payload;
+      const tasks = state.tasks.map(item => {
+        return item.id === id ? { ...item, ...task } : item;
+      });
+      return {
+        ...state,
+        tasks,
+      };
+    }
+
     case 'DELETE_TASK': {
       const { task } = payload;
       return {
@@ -57,7 +69,7 @@ export const tasksReducer = (state, { type, payload }) => {
         ...state,
         activeTask: null,
         tasks: state.tasks.map(item =>
-          item.id === task.id ? { ...item, done: status } : item
+          item.id === task.id ? { ...item, status } : item
         ),
       };
     }

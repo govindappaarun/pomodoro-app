@@ -115,6 +115,7 @@ function PomodoroPage() {
           duration: 3000,
           isClosable: true,
         });
+        onSwitch('shortbreak');
         break;
       case 'shortbreak':
         toast({
@@ -143,7 +144,7 @@ function PomodoroPage() {
         <VStack>
           <Box
             maxW={'445px'}
-            height={'65vh'}
+            height={'50vh'}
             w={'full'}
             bg={'red.100'}
             boxShadow={'xl'}
@@ -195,7 +196,7 @@ function PomodoroPage() {
                 mt={'4'}
                 size={'lg'}
                 onClick={onStart}
-                disabled={!tasksState?.activeTask}
+                disabled={active === 'pomodoro' && !tasksState?.activeTask}
               >
                 Start
               </Button>
@@ -216,11 +217,11 @@ function PomodoroPage() {
             </Stack>
             <Box mt={'2rem'}>
               {tasksState?.activeTask ? (
-                <Heading mb={'2rem'}>
-                  Active Task : {tasksState.activeTask.title}
+                <Heading mb={'1rem'}>
+                  Active Task:{tasksState.activeTask.title}
                 </Heading>
               ) : (
-                <p>Choose a task below </p>
+                <p>{active === 'pomodoro' && `Choose a task below`}</p>
               )}
             </Box>
           </Box>
