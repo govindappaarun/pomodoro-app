@@ -19,13 +19,16 @@ Other libraries used with this App are React Router v6, styled-components, fireb
 
 ## Demo
 
+https://user-images.githubusercontent.com/98606563/170002457-c7e4a7df-6a55-4272-b60b-2f3f276a1906.mp4
+
+
 ## Features
 
 Here are some of the prominant features covered part of this application
 
 Add Tasks
 Schedule Tasks
-Authentication
+Authentication with Firebase 
 Sign-up
 Login
 Logout
