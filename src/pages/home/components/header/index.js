@@ -12,15 +12,20 @@ function Header({ onSettings, onLogin, onLogout, isLoggedIn, ...rest }) {
     <HStack mx={5} align={'center'} mt={5}>
       <CheckCircleIcon boxSize={'40px'} color={'green.500'} ml={1} />
       <Heading>Pomofocus</Heading>
+
+      <Box flexGrow={'1'} />
+
       <NavLink to="/">
-        <Button leftIcon={<FaHome />}>Home</Button>
-      </NavLink>
-      <NavLink to="settings">
-        <Button leftIcon={<MdOutlineSettings />} size="lg">
-          Settings
+        <Button leftIcon={<FaHome />} variant="outline">
+          Home
         </Button>
       </NavLink>
 
+      <NavLink to="settings">
+        <Button leftIcon={<MdOutlineSettings />} size="lg" variant="outline">
+          Settings
+        </Button>
+      </NavLink>
       {!isLoggedIn && (
         <>
           <Button
@@ -28,27 +33,33 @@ function Header({ onSettings, onLogin, onLogout, isLoggedIn, ...rest }) {
             mr={1}
             size="lg"
             onClick={onLogin}
+            variant="outline"
           >
             Login
           </Button>
-          <NavLink to="/tasks">
-            <Button leftIcon={<FaTasks />}>Manage Tasks</Button>
-          </NavLink>
         </>
       )}
 
       {isLoggedIn && (
         <>
+          <NavLink to="/tasks">
+            <Button leftIcon={<FaTasks />} variant="outline">
+              Manage Tasks
+            </Button>
+          </NavLink>
+
           <NavLink to="report">
-            <Button leftIcon={<BsBarChart />} size="lg">
+            <Button leftIcon={<BsBarChart />} size="lg" variant="outline">
               Report
             </Button>
           </NavLink>
+
           <Button
             leftIcon={<FaUserCircle />}
             mr={1}
             size="lg"
             onClick={onLogout}
+            variant="outline"
           >
             Logout
           </Button>
